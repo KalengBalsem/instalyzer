@@ -1,0 +1,148 @@
+{% extends "layout.html" %}
+{% block body %}
+    <img src='{{ ig_profile.profile_picture }}' alt="profile_picture" width=100>
+    <h3>{{ ig_profile.username }}</h3>
+    <h4>{{ ig_profile.full_name }}</h4>
+    <p>bio: {{ ig_profile.bio }}</p>
+    <p>bio_link: {{ ig_profile.bio_link }}</p>
+
+    <p>category: {{ ig_profile.category }}</p>
+    <br />  
+    <p>posts_count: {{ ig_profile.posts_count }}</p>
+    <p>followers: {{ ig_profile.followers }}</p>
+    <p>following: {{ ig_profile.following }}</p>
+    <P>highlights_count: {{ ig_profile.no_of_highlights }}</P>
+
+    {% if ig_profile.is_private %}
+
+        <br>
+        <p><b><i>This account is private.</i></b></p>
+    
+    {% endif %}
+    
+    <!-- UPDATE BUTTON IF DATA IS ALREADY IN DATABASE-->
+    {% if update_available == True %}
+        <a href="{{ url_for('routes.update_data') }}"><button>Update Data</button></a>
+    {% endif %}
+
+{% block javascript %}
+<div>
+    <canvas id="popularUploadDay"></canvas>
+    <canvas id="popularUploadTime"></canvas>
+    <canvas id="postsPerformance"></canvas>
+    <canvas id="postsRatio"></canvas>
+    <canvas id="postsVolume"></canvas>
+</div>
+  
+  <script>
+    let analyzed_data = JSON.parse( {{ analyzed_data | tojson }} );
+    console.log(analyzed_data);
+    
+    const popularUploadDay = document.getElementById('popularUploadDay');
+    const popularUploadTime = document.getElementById('popularUploadTime');
+    const postsPerformance = document.getElementById('postsPerformance');
+    const postsRatio = document.getElementById('postsRatio');
+    const postsVolume = document.getElementById('postsVolume');
+
+    new Chart(popularUploadDay, {
+      type: 'bar',
+      data: {
+        labels: analyzed_data.popularUploadDay[0]['x'],
+        datasets: [{
+          label: 'Average Likes',
+          data: analyzed_data.popularUploadDay[0]['y'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });     
+    
+    new Chart(popularUploadTime, {
+      type: 'bar',
+      data: {
+        labels: analyzed_data.popularUploadTime[0]['x'],
+        datasets: [{
+          label: 'Average Likes',
+          data: analyzed_data.popularUploadTime[0]['y'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+    
+    new Chart(postsPerformance, {
+      type: 'line',
+      data: {
+        labels: analyzed_data.postsPerformance[0]['x'],
+        datasets: [{
+          label: 'Likes',
+          data: analyzed_data.postsPerformance[0]['y1'],
+          borderWidth: 1
+        },
+        {
+          label: 'Comments',
+          data: analyzed_data.postsPerformance[0]['y2'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    new Chart(postsRatio, {
+      type: 'pie',
+      data: {
+        labels: analyzed_data.postsRatio[0]['x'],
+        datasets: [{
+          label: "Post's Type Ratio",
+          data: analyzed_data.postsRatio[0]['y'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    new Chart(postsVolume, {
+      type: 'bar',
+      data: {
+        labels: analyzed_data.postsVolume[0]['x'],
+        datasets: [{
+          label: 'Post Volume',
+          data: analyzed_data.postsVolume[0]['y'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+{% endblock %}
+{% endblock %}

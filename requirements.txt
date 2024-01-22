@@ -1,0 +1,7 @@
+Flask
+Flask-SQLAlchemy
+w3lib
+pandas
+sqlite3
+timestamp
+requests
