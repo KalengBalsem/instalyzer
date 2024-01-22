@@ -1,41 +1,84 @@
 {% extends "layout.html" %}
 {% block body %}
-    <img src='{{ ig_profile.profile_picture }}' alt="profile_picture" width=100>
-    <h3>{{ ig_profile.username }}</h3>
-    <h4>{{ ig_profile.full_name }}</h4>
-    <p>bio: {{ ig_profile.bio }}</p>
-    <p>bio_link: {{ ig_profile.bio_link }}</p>
+  <!-- SIDEBAR (PROFILE)-->
+  <section class="sidebar">
+    <div class="top">
+        <img src='{{ ig_profile.profile_picture }}' alt="profile_picture" width=100>
+        <p>@{{ ig_profile.username }}</p>
+    </div>
+    
+    <div class="sidebar-info">
+        <h4>{{ ig_profile.full_name }}</h4>
+        <p class="category">{{ ig_profile.category }}</p>
+        <p>{{ ig_profile.bio }}</p>
+        <p>{{ ig_profile.bio_link }}</p>
+        <br />  
+        <p>posts: {{ ig_profile.posts_count }}</p>
+        <p>followers: {{ ig_profile.followers }}</p>
+        <p>following: {{ ig_profile.following }}</p>
+        <P>highlights: {{ ig_profile.no_of_highlights }}</P>
 
-    <p>category: {{ ig_profile.category }}</p>
-    <br />  
-    <p>posts_count: {{ ig_profile.posts_count }}</p>
-    <p>followers: {{ ig_profile.followers }}</p>
-    <p>following: {{ ig_profile.following }}</p>
-    <P>highlights_count: {{ ig_profile.no_of_highlights }}</P>
-
-    {% if ig_profile.is_private %}
+        {% if ig_profile.is_private %}
 
         <br>
         <p><b><i>This account is private.</i></b></p>
     
-    {% endif %}
-    
-    <!-- UPDATE BUTTON IF DATA IS ALREADY IN DATABASE-->
-    {% if update_available == True %}
+        {% endif %}
+
+        <!-- UPDATE BUTTON IF DATA IS ALREADY IN DATABASE-->
+        {% if update_available == True %}
         <a href="{{ url_for('routes.update_data') }}"><button>Update Data</button></a>
-    {% endif %}
+        {% endif %}
+    </div>
+  </section>
+
 
 {% block javascript %}
-<div>
-    <canvas id="popularUploadDay"></canvas>
-    <canvas id="popularUploadTime"></canvas>
-    <canvas id="postsPerformance"></canvas>
-    <canvas id="postsRatio"></canvas>
-    <canvas id="postsVolume"></canvas>
-</div>
+  <!-- DASHBOARD (CHART, ...)-->
+  <main>
+
+    <div class="chartCard">
+      <div class="chartBox">
+        <canvas id="popularUploadDay"></canvas>
+      </div>
+      <div class="chartBox"> 
+        <canvas id="postsVolume"></canvas>
+      </div>
+      <div class="chartBox"> 
+        <canvas id="popularUploadTime"></canvas>
+      </div>
+      <div class="chartBox"> 
+        <canvas id="postsRatio"></canvas>
+      </div>
+    </div>
+    <div class="chartCard2">
+      <div class="tags">
+
+        <div class="top-list">
+            <p>Top Hashtags:</p>
+            {% for i in analyzed_data.top_hashtags[0].top_hashtags %}
+              <span>{{ i }}</span>
+            {% endfor %}
+        </div>
+        <div class="top-list">
+            <p>Top Words:</p>
+            {% for i in analyzed_data.top_words[0].top_words %}
+              <span>{{ i }}</span>
+            {% endfor %}
+        </div>
+      </div>
+
+      <div class="chartBox"> 
+        <canvas id="postsPerformance"></canvas>
+      </div>
+    </div>
+
+  </main>
   
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <script>
-    let analyzed_data = JSON.parse( {{ analyzed_data | tojson }} );
+    let analyzed_data = {{ analyzed_data | tojson }}
     console.log(analyzed_data);
     
     const popularUploadDay = document.getElementById('popularUploadDay');
@@ -55,6 +98,7 @@
         }]
       },
       options: {
+        aspectRatio: 1,
         scales: {
           y: {
             beginAtZero: true
@@ -74,7 +118,14 @@
         }]
       },
       options: {
+        aspectRatio: 1,
         scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Time (in \o\'clock)'
+            }
+          },
           y: {
             beginAtZero: true
           }
@@ -98,6 +149,7 @@
         }]
       },
       options: {
+        aspectRatio: 1|3,
         scales: {
           y: {
             beginAtZero: true
@@ -117,11 +169,7 @@
         }]
       },
       options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
+
       }
     });
 
@@ -136,6 +184,7 @@
         }]
       },
       options: {
+        aspectRatio: 1,
         scales: {
           y: {
             beginAtZero: true
@@ -144,5 +193,12 @@
       }
     });
   </script>
+
+<!-- LOADING SCREEN -->
+  <div class="loader-wrapper">
+    <span class="loader"><span class="loader-inner"></span></span>
+  </div>
+  <script type="text/javascript"> $(window).on("load", function (e) { $(".loader-wrapper").fadeOut("slow"); }); </script>
+
 {% endblock %}
 {% endblock %}

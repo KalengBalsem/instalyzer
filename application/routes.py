@@ -104,7 +104,10 @@ def show_data(ig_username):
         else:
             with open(path, 'r',  encoding="utf8") as file:
                 data = json.load(file)
-                profile_data = parse_profile(data)
+                try:
+                    profile_data = parse_profile(data)
+                except:
+                    return "<h3>Username not Found.</h3>"
                 posts_data = parse_posts(data, ig_username)
             
             # updating data: remove the data first before adding the new one.
@@ -183,11 +186,6 @@ def show_data(ig_username):
                 db.session.commit()
             ####
 
-            # reset session
-            session['update_data'] = False
-            session['iteration'] = 0
-            ####
-
             # assigning the posts data
             ig_posts = ig_profile.posts
     else:
@@ -198,7 +196,12 @@ def show_data(ig_username):
     ####
 
     # analyze data + data visualization
-    analyzed_data = json.dumps(analyze_data(ig_username))
+    analyzed_data = analyze_data(ig_username)
+    ####
+
+    # reset session
+    session['update_data'] = False
+    session['iteration'] = 0
     ####
 
     return render_template("data.html", ig_profile=ig_profile, update_available=update_available, analyzed_data=analyzed_data)

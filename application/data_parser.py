@@ -11,6 +11,7 @@ def get_profile_picture(url, username):
 
 def parse_profile(json_file):
     user_data = json_file['data']['user']
+
     username = user_data['username']
     bio = user_data['biography']
     bio_link = user_data['bio_links']

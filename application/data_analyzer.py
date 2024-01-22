@@ -50,7 +50,7 @@ def analyze_data(username):
 
     # return 20 most frequent hashtags
     sorted_hash = sorted(hash.items(), key=lambda x:x[1], reverse=True)
-    top_hashtags = sorted_hash[:20]
+    top_hashtags = sorted_hash[:10]
     ####
 
     # 5. top caption words
@@ -69,7 +69,7 @@ def analyze_data(username):
     for i in sorted_word:
         if len(i[0]) <= 1:
             sorted_word.remove(i)
-    top_words = sorted_word[:20]
+    top_words = sorted_word[:10]
     ####
 
     # 6. daily posts volume

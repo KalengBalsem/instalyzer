@@ -11,8 +11,8 @@ class Profile(db.Model):
     following = db.Column(db.Integer, nullable=False)
     profile_picture = db.Column(db.String(999), nullable=False, default='default.jpg') #the default isn't configured yet
     no_of_highlights = db.Column(db.Integer, nullable=True)
-    bio = db.Column(db.String(150), nullable=True)
-    bio_link = db.Column(db.String(150), nullable=True)
+    bio = db.Column(db.String(150), nullable=False, default='')
+    bio_link = db.Column(db.String(150), nullable=False, default='')
     is_private = db.Column(db.Boolean, default=False, nullable=False)
 
     # one to many database (Profile <- Post)

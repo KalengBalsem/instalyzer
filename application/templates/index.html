@@ -1,8 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
     <form action="{{ url_for('routes.data') }}" method="post">
-        <input type="text" placeholder="Insta Username" name="ig_username" required/>
-        <input type="number" value="0" min="0" max="3" name="iteration" required/>
+        <input class="input" type="text" placeholder="Insta Username" name="ig_username" required/>
+        <input class="input" type="number" value="0" min="0" max="3" name="iteration" required/>
         <button type="submit">Analyze</button>
     </form>
 {% endblock %}
