@@ -12,7 +12,6 @@ routes = Blueprint('routes', __name__)
 
 @routes.route("/")
 def index():
-    session.clear()
     return render_template("index.html")
 
 @routes.route("/data", methods=["GET", "POST"])
@@ -36,32 +35,34 @@ def preparing_data():
     ####
 
     # checking whether the data already exists
-    path = f'scraper\\scraped_data\\{ig_username}.json'
-    data_exists = os.path.isfile(path)
-
-    more_path = f'scraper\\scraped_data\\{ig_username}{iteration}.json'
-    more_data_exists = os.path.isfile(more_path)
+    for iter in range(iteration+1):
+        path = f'scraper\\scraped_data\\{ig_username}{iter}.json'
+        data_exists = os.path.isfile(path)
     ####
 
-    # create update condition
-    if "update_data" not in session:
-        session["update_data"] = False
+    # create update condition if there's None
+    if session['update_data'] is None:
+        session['update_data'] = False
     update_data = session.get('update_data', None)
     ####
 
+    # getting the data, redirect to show data
+
     # defining go to show-data to make life easier
     show_data_url = url_for('routes.show_data', ig_username=ig_username)
-    ####
+    ###
 
     if data_exists and not update_data:
         return redirect(show_data_url)
+    elif iteration == 0:
+        scraping_success = scrape_data(ig_username)
+        if scraping_success:
+            return redirect(show_data_url)
+        else:
+            return "<h3>Failed to get the data. Make sure the IG Username is valid.</h3>"
     elif iteration > 0:
-        if more_data_exists:
-            redirect(show_data_url)
-
         scraping_success = scrape_data(ig_username)
         more_scraping_success = scrape_more(ig_username, iteration)
-
         if scraping_success and more_scraping_success:
             return redirect(show_data_url)
         elif scraping_success:
@@ -69,25 +70,28 @@ def preparing_data():
             return redirect(show_data_url)
         else:
             return "<h3>Failed to get the data. Make sure the IG Username is valid.</h3>"
-    else: 
-        # run scraper via function
-        scraping_success = scrape_data(ig_username)
-        if scraping_success:
-            return redirect(show_data_url)
-        else:
-            return "<h3>Failed to get the data. Make sure the IG Username is valid.</h3>"
-        
+    ####
 
-@routes.route('/show-data/<ig_username>')
+@routes.route('/show-data/<ig_username>/')
 def show_data(ig_username):
 
     # updating session if ig_username changed using url and the data_exists.
-    session['ig_username'] = ig_username
+    if session.get('ig_username', None) != ig_username:
+        return redirect(url_for('routes.index'))
+
+    iteration = session.get('iteration', None)
     ####
 
     # recheck if the data exists (in case user modifying the username in web query straight away)
-    path = f'scraper\\scraped_data\\{ig_username}.json'
-    data_exists = os.path.isfile(path)
+    available_post_data = 0
+    for iter in range(iteration+1):
+        path = f'scraper\\scraped_data\\{ig_username}{iter}.json'
+        data_exists = os.path.isfile(path)
+        if iter == 0 and data_exists:
+            profile_data_exists = data_exists
+
+        if iter > 0 and data_exists:
+            available_post_data += 1
     ####
 
     # defining update_data and if update_available (data is already in the database)
@@ -95,49 +99,65 @@ def show_data(ig_username):
     update_available = False
     ####
 
-    # getting / modifying database
+    # getting profile and post
     found_profile = Profile.query.filter_by(username=ig_username).first() # will return None if username is not found
-    if data_exists:
-        if found_profile and not update_data:
+    # below is to support iteration feature
+    if found_profile:
+        found_post = Post.query.filter_by(owner_id=found_profile.id).all()
+        requested_post = (iteration+1)*12
+        if len(found_post) < 12:
+            found_more_post = True
+        else:
+            found_more_post = len(found_post) >= requested_post
+    else:
+        found_post = []
+        found_more_post = False
+    ####
+
+    # getting and modifying the database
+    if profile_data_exists:
+        if found_profile and found_more_post and not update_data:
             ig_profile = found_profile
             update_available=True
         else:
+            path = f'scraper\\scraped_data\\{ig_username}0.json'
             with open(path, 'r',  encoding="utf8") as file:
                 data = json.load(file)
                 try:
                     profile_data = parse_profile(data)
                 except:
                     return "<h3>Username not Found.</h3>"
-                posts_data = parse_posts(data, ig_username)
             
             # updating data: remove the data first before adding the new one.
             if update_data:
-                found_post = Post.query.filter_by(owner_id=found_profile.id).first()
                 if found_post: # in case user doesnt have any post
-                    db.session.delete(found_post)
-                db.session.delete(found_profile)
+                    for i in found_post:
+                        db.session.delete(i)
+                if found_profile:
+                    db.session.delete(found_profile)
                 db.session.commit()
             ####
             
             # instantiating profile and posts data
-            profile = Profile(
-                            user_id = profile_data['id'],
-                            username = profile_data['username'],
-                            full_name = profile_data['full_name'],
-                            category = profile_data['category'],
-                            posts_count = profile_data['posts_count'],
-                            followers = profile_data['followers'],
-                            following = profile_data['following'],
-                            profile_picture = profile_data['profile_picture'],
-                            no_of_highlights = profile_data['no_of_highlights'],
-                            bio = profile_data['bio'],
-                            bio_link = profile_data['bio link'],
-                            is_private = profile_data['is_private']
-                        )
+            if not found_profile or update_data:
+                profile = Profile(
+                                user_id = profile_data['id'],
+                                username = profile_data['username'],
+                                full_name = profile_data['full_name'],
+                                category = profile_data['category'],
+                                posts_count = profile_data['posts_count'],
+                                followers = profile_data['followers'],
+                                following = profile_data['following'],
+                                profile_picture = profile_data['profile_picture'],
+                                no_of_highlights = profile_data['no_of_highlights'],
+                                bio = profile_data['bio'],
+                                bio_link = profile_data['bio link'],
+                                is_private = profile_data['is_private']
+                            )
 
-            # adding profile_data to database + commiting changes
-            db.session.add(profile)
-            db.session.commit()
+                # adding profile_data to database + commiting changes
+                db.session.add(profile)
+                db.session.commit()
 
             # assigning the profile data
             ig_profile = Profile.query.filter_by(username=ig_username).first()
@@ -161,33 +181,22 @@ def show_data(ig_username):
                 return post
             ####
             
-            # looping in post_data in MAIN DATA
-            for i, post_data in posts_data.items():
-                post = post_func(post_data)
-                # adding posts_data to database
-                db.session.add(post)
-            # commiting changes (posts_data)
-            db.session.commit()
-                
-            # looping in post_data in ADDITIONAL DATA (iteration != 0)
-            iteration = session.get('iteration', None)
-
-            if iteration > 0:
-                for iter in range(iteration):
-                    path = f'scraper\\scraped_data\\{ig_username}{iter+1}.json'
+            # looping in posts_data and send it to the database
+            if not found_more_post or update_data:
+                start = int(len(found_post) / 12)       # to start from 0
+                end = available_post_data + 1           # to include the last iteration (taken from the data_exists loop line 86)
+                for iter in range(start, end):
+                    path = f'scraper\\scraped_data\\{ig_username}{iter}.json'
                     with open(path, 'r',  encoding="utf8") as file:
                         data = json.load(file)
-                        posts_data = parse_posts(data, ig_username)
+                        more_posts_data = parse_posts(data, ig_username)
                     
-                    for i, post_data in posts_data.items():
+                    for i, post_data in more_posts_data.items():
                         post = post_func(post_data)
                         db.session.add(post)
                 # commiting changes (more posts_data)
                 db.session.commit()
             ####
-
-            # assigning the posts data
-            ig_posts = ig_profile.posts
     else:
         return redirect(url_for('routes.index'))
     
@@ -196,12 +205,11 @@ def show_data(ig_username):
     ####
 
     # analyze data + data visualization
-    analyzed_data = analyze_data(ig_username)
+    analyzed_data = analyze_data(ig_username, iteration)
     ####
 
     # reset session
     session['update_data'] = False
-    session['iteration'] = 0
     ####
 
     return render_template("data.html", ig_profile=ig_profile, update_available=update_available, analyzed_data=analyzed_data)

@@ -3,12 +3,14 @@ import sqlite3
 
 from . import DB_NAME
 
-def analyze_data(username):
+def analyze_data(username, iteration):
     con = sqlite3.connect(f'instance\\{DB_NAME}')
 
     owner_id = con.execute(f"SELECT id FROM Profile WHERE username='{username}'").fetchone()[0]
     df = pd.read_sql_query(f"SELECT * FROM Post WHERE owner_id={owner_id}", con)
 
+    requested_posts_count = (iteration+1)*12
+    df = df.iloc[:requested_posts_count+1]
 
     # DATA CLEANING
     # initialize datetime column + adding day column
@@ -84,6 +86,11 @@ def analyze_data(username):
     postsRatio_y = [i for i in postsRatio]
     ####
     
+    # 8. Posts List
+    most_liked_posts = [i for i in df.sort_values(['likes_count'], ascending=False)['url'].iloc[:20]]
+    most_commented_posts =  [i for i in df.sort_values(['comments_count'], ascending=False)['url'].iloc[:20]]
+    ####
+
     analyzed_data = {
         'popularUploadDay': [{ 'x': popularUploadDay_x, 'y': popularUploadDay_y}],
         'popularUploadTime': [{ 'x': popularUploadTime_x, 'y': popularUploadTime_y}],
@@ -92,6 +99,8 @@ def analyze_data(username):
         'top_words': [{'top_words': top_words}],
         'postsVolume': [{ 'x': postsVolume_x, 'y': postsVolume_y}],
         'postsRatio': [{ 'x': postsRatio_x, 'y': postsRatio_y}],
+        'most_liked_posts': [{'most_liked_posts': most_liked_posts}],
+        'most_commented_posts': [{'most_commented_posts': most_commented_posts}]
     }
 
     return analyzed_data

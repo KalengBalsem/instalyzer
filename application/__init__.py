@@ -4,9 +4,9 @@ from os import path
 
 # creating database instance
 db = SQLAlchemy()
-DB_NAME = "data.db"
+DB_NAME = "test_iteration.db"
 
-# application
+# main application
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'QhlNilSNaa12nenmsKOi32MMMzn29138'

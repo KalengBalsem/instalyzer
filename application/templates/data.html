@@ -72,6 +72,21 @@
         <canvas id="postsPerformance"></canvas>
       </div>
     </div>
+    <div class="posts-list">
+      <h3>Most Liked Posts</h3>
+      <ol>
+        {% for i in analyzed_data.most_liked_posts[0].most_liked_posts %}
+        <li><a href="{{ i }}" target=”_blank”>{{ i }}</a></li>
+        {% endfor %}
+      </ol>
+      <br />
+      <h3>Most Commented Posts</h3>
+      <ol>
+        {% for i in analyzed_data.most_commented_posts[0].most_commented_posts %}
+        <li><a href="{{ i }}" target=”_blank”>{{ i }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
 
   </main>
   

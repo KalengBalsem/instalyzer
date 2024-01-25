@@ -53,7 +53,7 @@ def scrape_data(username):
     scraping_success = False
     try:
         response = requests.get(profile_url, headers=random.choice(header_list), timeout=10)
-        with open(f'scraper\\scraped_data\\{username}.json', 'w') as file:
+        with open(f'scraper\\scraped_data\\{username}0.json', 'w') as file:
             data = response.json()   # it will raise an error here if the response is not in json
             json.dump(data, file)
         print('Data scraped successfully.')
@@ -66,38 +66,34 @@ def scrape_more(username, iteration):   # MAXIMUM iteration without proxy = 3 (t
     more_scraping_success = False
     for i in range(iteration):
         try:
-            # the first iteration
+            with open(f'scraper\\scraped_data\\{username}{i}.json', 'r') as file:
+                profile_response = json.load(file)
+            # get user id the first iteration
             if i == 0: 
-                with open(f'scraper\\scraped_data\\{username}.json', 'r') as file:
-                    profile_response = json.load(file)
                 user_id = profile_response['data']['user']['id'] # defining user_id once.
-            # next iterations
-            else:
-                with open(f'scraper\\scraped_data\\{username}{i-1}.json', "r") as file:
-                    profile_response = json.load(file)
             
             # defining end cursor to follow through
             end_cursor = profile_response['data']['user']['edge_owner_to_timeline_media']['page_info']['end_cursor'][:-2]  # [:-2] is to remove "==" at the end of end_cursor 
-            ####
+            if end_cursor:
+                # keeps following the end_cursor using unique IG URL (last updated: Jan 2024)
+                post_url = f'''
+                        https://www.instagram.com/graphql/query/?doc_id=17991233890457762&variables=%7B%22id%22%3A%22{user_id}%22%2C%22after%22%3A%22{end_cursor}%3D%3D%22%2C%22first%22%3A12%7D
+                '''
+                # add delay
+                time.sleep(random.uniform(7, 11))
+                ####  
 
-            # keeps following the end_cursor using unique IG URL (last updated: Jan 2024)
-            post_url = f'''
-                    https://www.instagram.com/graphql/query/?doc_id=17991233890457762&variables=%7B%22id%22%3A%22{user_id}%22%2C%22after%22%3A%22{end_cursor}%3D%3D%22%2C%22first%22%3A12%7D
-            '''
-            # add delay
-            time.sleep(random.uniform(7, 11))
-            ####  
+                response = requests.get(post_url, headers=random.choice(header_list), timeout=20)
+                data = response.json()
 
-            response = requests.get(post_url, headers=random.choice(header_list), timeout=20)
-            data = response.json()
+                # store JSON data in file
+                with open(f'scraper\\scraped_data\\{username}{i+1}.json', 'w') as file:
+                    json.dump(data, file)
 
-            # store JSON data in file
-            with open(f'scraper\\scraped_data\\{username}{i}.json', 'w') as file:
-                json.dump(data, file)
-
-            print(f'{username}\'s iteration {i+1} data scraped successfuly!')
-            more_scraping_success = True
-                
+                print(f'{username}\'s iteration {i+1} data scraped successfuly!')
+                more_scraping_success = True
+            else:
+                return more_scraping_success
         except:
             print(f'{username}\'s iteration {i+1} iteration data failed')
     return more_scraping_success

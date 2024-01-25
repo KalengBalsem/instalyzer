@@ -10,6 +10,10 @@ optimization
 
 scaling
 # following end_route to get more posts data from requests (iteration)
+    # problems:
+        # it keeps iterating
+
+
 # additional data for posts in models.py
 
 features:
