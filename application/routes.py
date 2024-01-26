@@ -41,7 +41,7 @@ def preparing_data():
     ####
 
     # create update condition if there's None
-    if session['update_data'] is None:
+    if session.get('update_data', None) is None:
         session['update_data'] = False
     update_data = session.get('update_data', None)
     ####
