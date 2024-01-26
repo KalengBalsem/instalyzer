@@ -12,8 +12,22 @@ pip install -r requirements.txt
 7. run this command in the terminal to run the server in localhost:
 ```
 python main.py
+
+PS C:\Users\balse\Documents\VScode\instalyzer> python main.py
+
+# output:
+Created Database!
+ * Serving Flask app 'application'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Created Database!
+ * Debugger is active!
+ * Debugger PIN: 102-884-233
 ```
-8. open the localhost link: 127.0.0.1:5000
+8. open the localhost link -> 127.0.0.1:5000
 9. done
 
 ## Feature
