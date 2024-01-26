@@ -17,9 +17,14 @@ pip install -r requirements.txt
 ```
 7. run this command in the terminal to run the server in localhost:
 ```
+# windows
 python main.py
-
 PS C:\Users\balse\Documents\VScode\instalyzer> python main.py
+####
+
+# MacOS
+python3 main.py
+####
 
 # output:
 Created Database!
