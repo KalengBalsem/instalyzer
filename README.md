@@ -1,15 +1,18 @@
 ## Installation and Running
-1. download and open an IDE (e.g. VS Code, Pycharm, Atom, etc)
-2. open an empty folder
-3. run the following in the terminal:
+1. create an empty folder
+2. open the folder in an IDE (recommend: VScode)
+3. run the following in the terminal inside the IDE:
 ```
-gitclone ...
+gitclone git@github.com:KalengBalsem/instalyzer.git
 ```
 6. install the dependencies by running this command in the terminal:
 ```
 pip install -r requirements.txt
 ```
-7. run main.py
+7. run this command in the terminal to run the server in localhost:
+```
+python main.py
+```
 8. open the localhost link: 127.0.0.1:5000
 9. done
 
