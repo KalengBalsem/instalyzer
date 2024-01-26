@@ -4,7 +4,7 @@ from os import path
 
 # creating database instance
 db = SQLAlchemy()
-DB_NAME = "test_iteration.db"
+DB_NAME = "database.db"
 
 # main application
 def create_app():
