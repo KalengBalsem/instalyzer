@@ -9,7 +9,7 @@ git clone https://github.com/KalengBalsem/instalyzer.git
    # windows cmd command
    cd instalyzer
 
-   # the path of the terminal should be: PS C:\Users\balse\Documents\VScode\a_folder\instalyzer> 
+   # the end path of the terminal should be instalyzer: PS C:\Users\balse\Documents\VScode\a_folder\instalyzer> 
    ```
 6. install the dependencies by running this command in the terminal:
 ```
