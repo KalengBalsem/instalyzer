@@ -10,7 +10,7 @@ gitclone ...
 pip install -r requirements.txt
 ```
 7. run main.py
-8. open the localhost
+8. open the localhost link: 127.0.0.1:5000
 9. done
 
 ## Feature
