@@ -1,16 +1,33 @@
 ## Installation and Running
-1. download and open an IDE (e.g. VS Code, Pycharm, Atom, etc)
-2. open an empty folder
-3. run the following in the terminal:
+1. create an empty folder
+2. open the folder in an IDE (recommend: VScode)
+3. run the following in the terminal inside the IDE:
 ```
-gitclone ...
+gitclone git@github.com:KalengBalsem/instalyzer.git
 ```
 6. install the dependencies by running this command in the terminal:
 ```
 pip install -r requirements.txt
 ```
-7. run main.py
-8. open the localhost link: 127.0.0.1:5000
+7. run this command in the terminal to run the server in localhost:
+```
+python main.py
+
+PS C:\Users\balse\Documents\VScode\instalyzer> python main.py
+
+# output:
+Created Database!
+ * Serving Flask app 'application'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Created Database!
+ * Debugger is active!
+ * Debugger PIN: 102-884-233
+```
+8. open the localhost link -> 127.0.0.1:5000
 9. done
 
 ## Feature
