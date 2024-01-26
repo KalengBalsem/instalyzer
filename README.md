@@ -1,10 +1,14 @@
 ## Installation and Running
-1. create an empty folder
-2. open the folder in an IDE (recommend: VScode)
-3. run the following in the terminal inside the IDE:
+1. open an IDE (recommend: VScode)
+2. run the following in the terminal inside the IDE:
 ```
-gitclone git@github.com:KalengBalsem/instalyzer.git
+git clone https://github.com/KalengBalsem/instalyzer.git
 ```
+3. locate the instalyzer file in the terminal:
+   ```
+   # windows cmd command
+   cd instalyzer
+   ```
 6. install the dependencies by running this command in the terminal:
 ```
 pip install -r requirements.txt
