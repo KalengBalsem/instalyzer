@@ -1,5 +1,5 @@
 ## Overview
-This project aims to allow us to use a simple yet powerful instagram data analytics with an IG username.
+This project aims to allow us to analyze any IG account with a username using a simple yet powerful instagram data analytic tool.
 
 ## Installation and Running
 1. open an IDE (recommend: VScode)
