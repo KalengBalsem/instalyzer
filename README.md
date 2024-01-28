@@ -1,3 +1,6 @@
+## Overview
+This project aims to allow us to use a simple yet powerful instagram data analytics with an IG username.
+
 ## Installation and Running
 1. open an IDE (recommend: VScode)
 2. run the following in the terminal inside the IDE:
