@@ -2,6 +2,7 @@
 This project aims to allow us to analyze any IG account with a username using a simple yet powerful instagram data analytic tool.
 
 ## Installation and Running
+Note: only compatible on Windows
 1. open an IDE (recommend: VScode)
 2. run the following in the terminal inside the IDE:
 ```
