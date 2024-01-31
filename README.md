@@ -25,10 +25,6 @@ python main.py
 PS C:\Users\balse\Documents\VScode\instalyzer> python main.py
 ####
 
-# MacOS
-python3 main.py
-####
-
 # output:
 Created Database!
  * Serving Flask app 'application'
