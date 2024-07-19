@@ -106,8 +106,9 @@ def show_data(ig_username):
     # below is to support iteration feature
     if found_profile:
         found_post = Post.query.filter_by(owner_id=found_profile.id).all()
-        requested_post = (iteration)*12
-        if len(found_post) < 12:
+        requested_post = (iteration+1)*12
+        print(requested_post, found_post)
+        if len(found_post) < 12:    # if the profile has less than 12 posts -> the max post is in the iter = 0.
             found_more_post = True
         else:
             found_more_post = len(found_post) >= requested_post
@@ -129,7 +130,7 @@ def show_data(ig_username):
                 try:
                     profile_data = parse_profile(data)
                 except:
-                    return "<h3>Username not Found.</h3>"
+                    return "<h3>Something's wrong when the system tried to parse the profile data.</h3>"
             
             # updating data: remove the data first before adding the new one.
             if update_data:

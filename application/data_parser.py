@@ -15,10 +15,10 @@ def parse_profile(json_file):
         if not bio_link == []:
             url = bio_link[0]['url']
             return url 
-
+        
     def get_profile_picture(url, username):
         img = requests.get(url).content
-        profile_picture_path = os.path.join(os.getcwd(), 'static', 'profile_pictures', f'{username}.jpg')
+        profile_picture_path = os.path.join(os.getcwd(), 'application', 'static', 'profile_pictures', f'{username}.jpg')
         with open(profile_picture_path, 'wb') as file:
             file.write(img)
         return profile_picture_path
