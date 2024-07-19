@@ -1,13 +1,19 @@
+## Overview
+This project aims to allow us to analyze any IG account with a username using a simple yet powerful instagram data analytic tool.
+
 ## Installation and Running
+Note: only compatible on Windows
 1. open an IDE (recommend: VScode)
 2. run the following in the terminal inside the IDE:
 ```
 git clone https://github.com/KalengBalsem/instalyzer.git
 ```
-3. locate the instalyzer file in the terminal:
+3. **IMPORTANT** locate the instalyzer file in the terminal:
    ```
    # windows cmd command
    cd instalyzer
+
+   # the end path of the terminal should be instalyzer: PS C:\Users\balse\Documents\VScode\a_folder\instalyzer> 
    ```
 6. install the dependencies by running this command in the terminal:
 ```
@@ -15,9 +21,10 @@ pip install -r requirements.txt
 ```
 7. run this command in the terminal to run the server in localhost:
 ```
+# windows
 python main.py
-
 PS C:\Users\balse\Documents\VScode\instalyzer> python main.py
+####
 
 # output:
 Created Database!
