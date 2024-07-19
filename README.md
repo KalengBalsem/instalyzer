@@ -1,4 +1,5 @@
 ## Overview
+![instalyzer](https://drive.google.com/file/d/14LF7AsSJqOlWFQi09-guosWLkpO2XeUS/view?usp=sharing)
 This project aims to allow us to analyze any IG account with a username using a simple yet powerful instagram data analytic tool.
 
 ## Installation and Running
