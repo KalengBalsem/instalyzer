@@ -1,5 +1,6 @@
 import requests             # to scrape data
 import random, time, json   # to scrape data politely
+import os
 
 header_list = [
         {
@@ -53,7 +54,8 @@ def scrape_data(username):
     scraping_success = False
     try:
         response = requests.get(profile_url, headers=random.choice(header_list), timeout=10)
-        with open(f'scraper\\scraped_data\\{username}0.json', 'w') as file:
+        file_path = os.path.join(os.getcwd(), 'scraper', 'scraped_data', f'{username}0.json')
+        with open(file_path, 'w') as file:
             data = response.json()   # it will raise an error here if the response is not in json
             json.dump(data, file)
         print('Data scraped successfully.')
@@ -66,7 +68,8 @@ def scrape_more(username, iteration):   # MAXIMUM iteration without proxy = 3 (t
     more_scraping_success = False
     for i in range(iteration):
         try:
-            with open(f'scraper\\scraped_data\\{username}{i}.json', 'r') as file:
+            file_path = os.path.join(os.getcwd(), 'scraper', 'scraped_data', f'{username}{i}.json')
+            with open(file_path, 'r') as file:
                 profile_response = json.load(file)
             # get user id the first iteration
             if i == 0: 
@@ -87,7 +90,8 @@ def scrape_more(username, iteration):   # MAXIMUM iteration without proxy = 3 (t
                 data = response.json()
 
                 # store JSON data in file
-                with open(f'scraper\\scraped_data\\{username}{i+1}.json', 'w') as file:
+                file_path = os.path.join(os.getcwd(), 'scraper', 'scraped_data', f'{username}{i+1}.json')
+                with open(file_path, 'w') as file:
                     json.dump(data, file)
 
                 print(f'{username}\'s iteration {i+1} data scraped successfuly!')

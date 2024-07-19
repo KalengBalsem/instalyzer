@@ -1,13 +1,7 @@
 from w3lib.html import replace_escape_chars
 from datetime import datetime
 import requests                             # to get profile picture
-
-def get_profile_picture(url, username):
-    img = requests.get(url).content
-    with open(f'scraper\\profile_pictures\\{username}.jpg', 'wb') as file:
-        file.write(img)
-    return f'scraper\profile_pictures\{username}.jpg'
-
+import os
 
 def parse_profile(json_file):
     user_data = json_file['data']['user']
@@ -24,9 +18,10 @@ def parse_profile(json_file):
 
     def get_profile_picture(url, username):
         img = requests.get(url).content
-        with open(f'application\\static\\profile_pictures\\{username}.jpg', 'wb') as file:
+        profile_picture_path = os.path.join(os.getcwd(), 'static', 'profile_pictures', f'{username}.jpg')
+        with open(profile_picture_path, 'wb') as file:
             file.write(img)
-        return f'/static/profile_pictures/{username}.jpg'
+        return profile_picture_path
     ####
 
     profile_data =  {

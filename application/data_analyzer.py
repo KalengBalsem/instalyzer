@@ -4,7 +4,7 @@ import sqlite3
 from . import DB_NAME
 
 def analyze_data(username, iteration):
-    con = sqlite3.connect(f'instance\\{DB_NAME}')
+    con = sqlite3.connect(rf'instance\{DB_NAME}')
 
     owner_id = con.execute(f"SELECT id FROM Profile WHERE username='{username}'").fetchone()[0]
     df = pd.read_sql_query(f"SELECT * FROM Post WHERE owner_id={owner_id}", con)

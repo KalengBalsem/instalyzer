@@ -5,7 +5,7 @@ from . import db
 from .data_parser import parse_profile, parse_posts     # importing parser
 from .data_scraper import scrape_data, scrape_more      # to run scraper on different file
 from .data_analyzer import analyze_data                 # to analyze data
-import os.path                                          # to check whether the data exists in the scraped_data folder
+import os                                               # to check whether the data exists in the scraped_data folder
 
 
 routes = Blueprint('routes', __name__)
@@ -36,7 +36,8 @@ def preparing_data():
 
     # checking whether the data already exists
     for iter in range(iteration+1):
-        path = f'scraper\\scraped_data\\{ig_username}{iter}.json'
+        filename = f'{ig_username}{iter}.json'
+        path = os.path.join(os.getcwd(), 'scraper', 'scraped_data', filename)
         data_exists = os.path.isfile(path)
     ####
 
@@ -85,7 +86,8 @@ def show_data(ig_username):
     # recheck if the data exists (in case user modifying the username in web query straight away)
     available_post_data = 0
     for iter in range(iteration+1):
-        path = f'scraper\\scraped_data\\{ig_username}{iter}.json'
+        filename = f'{ig_username}{iter}.json'
+        path = os.path.join(os.getcwd(), 'scraper', 'scraped_data', filename)
         data_exists = os.path.isfile(path)
         if iter == 0 and data_exists:
             profile_data_exists = data_exists
@@ -104,7 +106,7 @@ def show_data(ig_username):
     # below is to support iteration feature
     if found_profile:
         found_post = Post.query.filter_by(owner_id=found_profile.id).all()
-        requested_post = (iteration+1)*12
+        requested_post = (iteration)*12
         if len(found_post) < 12:
             found_more_post = True
         else:
@@ -120,7 +122,8 @@ def show_data(ig_username):
             ig_profile = found_profile
             update_available=True
         else:
-            path = f'scraper\\scraped_data\\{ig_username}0.json'
+            filename = f'{ig_username}0.json'
+            path = os.path.join(os.getcwd(), 'scraper', 'scraped_data', filename)
             with open(path, 'r',  encoding="utf8") as file:
                 data = json.load(file)
                 try:
@@ -186,7 +189,8 @@ def show_data(ig_username):
                 start = int(len(found_post) / 12)       # to start from 0
                 end = available_post_data + 1           # to include the last iteration (taken from the data_exists loop line 86)
                 for iter in range(start, end):
-                    path = f'scraper\\scraped_data\\{ig_username}{iter}.json'
+                    filename = f'{ig_username}{iter}.json'
+                    path = os.path.join(os.getcwd(), 'scraper', 'scraped_data', filename)
                     with open(path, 'r',  encoding="utf8") as file:
                         data = json.load(file)
                         more_posts_data = parse_posts(data, ig_username)
