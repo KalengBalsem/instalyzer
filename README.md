@@ -56,3 +56,6 @@ Data visualizations:
 - Top hashtags
 - Top caption words
 - List of links to Most Liked Posts and Most Commented Posts
+
+
+![1ba70346-120f-4dde-9d7c-e838759bbbbb](https://github.com/user-attachments/assets/62e5e743-3646-4303-9aa4-a196453e3f75)
